@@ -3,28 +3,12 @@ package com.chairbender.riichi_quiz;//
 // (powered by Fernflower decompiler)
 //
 
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Graphics;
-import java.awt.LayoutManager;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.FocusEvent;
-import java.awt.event.FocusListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import javax.swing.ImageIcon;
-import javax.swing.JApplet;
-import javax.swing.JButton;
-import javax.swing.JCheckBox;
-import javax.swing.JLabel;
-import javax.swing.JTextArea;
-import javax.swing.JTextField;
-import javax.swing.UIManager;
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
 
-public class MJScoreQuiz extends JApplet implements KeyListener, ActionListener, MouseListener, FocusListener {
+public class MJScoreQuiz extends JFrame implements KeyListener, ActionListener, MouseListener, FocusListener, WindowListener {
+    private static final int HAND_OFFSET_Y = 30;
     protected ImageIcon[] tileImages;
     int numHands;
     int numCorFu;
@@ -130,36 +114,76 @@ public class MJScoreQuiz extends JApplet implements KeyListener, ActionListener,
     JTextArea hanList;
     JCheckBox infureBox;
 
-    public MJScoreQuiz() {
+    public static void main(String[] args) {
+        MJScoreQuiz mjScoreQuiz = new MJScoreQuiz();
+        mjScoreQuiz.setSize(700, 460);
+        mjScoreQuiz.setVisible(true);
+        mjScoreQuiz.setResizable(false);
     }
 
-    public void init() {
-        this.setLayout((LayoutManager)null);
+    @Override
+    public void windowOpened(WindowEvent e) {
+
+    }
+
+    @Override
+    public void windowClosing(WindowEvent e) {
+        dispose();
+        System.exit(0);
+    }
+
+    @Override
+    public void windowClosed(WindowEvent e) {
+    }
+
+    @Override
+    public void windowIconified(WindowEvent e) {
+
+    }
+
+    @Override
+    public void windowDeiconified(WindowEvent e) {
+
+    }
+
+    @Override
+    public void windowActivated(WindowEvent e) {
+
+    }
+
+    @Override
+    public void windowDeactivated(WindowEvent e) {
+
+    }
+
+    public MJScoreQuiz() {
+        this.addWindowListener(this);
+        this.setLayout(null);
         UIManager.put("swing.boldMetal", Boolean.FALSE);
         this.setBackground(Color.WHITE);
         this.titleLabel = new JLabel("Mahjong Scoring Quiz");
-        this.roundLabel = new JLabel("??/Round wind");
+        this.roundLabel = new JLabel("Round wind");
         this.roundField = new JTextField(1);
         this.roundField.setEditable(false);
-        this.seatLabel = new JLabel("??/Seat wind");
+        this.seatLabel = new JLabel("Seat wind");
         this.seatField = new JTextField(1);
         this.seatField.setEditable(false);
         this.riichiField = new JTextField(21);
         this.riichiField.setEditable(false);
-        this.doraLabel = new JLabel("????/Dora indicators");
-        this.uraLabel = new JLabel("?????/Uradora indicators");
-        this.fuLabel = new JLabel("?/Fu");
+        this.doraLabel = new JLabel("Dora indicators");
+        this.uraLabel = new JLabel("Uradora indicators");
+        this.fuLabel = new JLabel("Fu");
         this.fuEntry = new JTextField(3);
         this.fuAnswer = new JTextField(3);
         this.fuAnswer.setEditable(false);
-        this.hanLabel = new JLabel("?/Han");
+        this.hanLabel = new JLabel("Han");
         this.hanEntry = new JTextField(3);
         this.hanAnswer = new JTextField(3);
         this.hanAnswer.setEditable(false);
-        this.yakumanBox = new JCheckBox("??/Yakuman");
+        this.yakumanBox = new JCheckBox("Yakuman");
         this.yakumanBox.setActionCommand("Yakuman");
         this.yakumanBox.addActionListener(this);
-        this.payLabel = new JLabel("??(?,?)/Payment");
+        this.payLabel = new JLabel("Payment");
         this.payLabel2 = new JLabel("(Non-dealer, Dealer)");
         this.koEntry = new JTextField(6);
         this.koAnswer = new JTextField(6);
@@ -201,8 +225,8 @@ public class MJScoreQuiz extends JApplet implements KeyListener, ActionListener,
         Dimension dim = this.titleLabel.getPreferredSize();
         this.titleLabel.setBounds(this.layoutx, this.layouty, dim.width, dim.height);
         this.layoutx = 5;
-        this.layouty += dim.height + 10;
-        this.doray = this.layouty;
+        this.layouty += dim.height + 5;
+        this.doray = this.layouty+25;
         this.add(this.roundLabel);
         dim = this.roundLabel.getPreferredSize();
         this.roundLabel.setBounds(this.layoutx, this.layouty, dim.width, dim.height);
@@ -219,7 +243,7 @@ public class MJScoreQuiz extends JApplet implements KeyListener, ActionListener,
         dim = this.seatField.getPreferredSize();
         this.seatField.setBounds(this.layoutx, this.layouty, dim.width, dim.height);
         this.layoutx = 5;
-        this.layouty += dim.height + 10;
+        this.layouty += dim.height+5;
         this.add(this.riichiField);
         dim = this.riichiField.getPreferredSize();
         this.riichiField.setBounds(this.layoutx, this.layouty, dim.width, dim.height);
@@ -336,54 +360,43 @@ public class MJScoreQuiz extends JApplet implements KeyListener, ActionListener,
             this.tileImages[this.arrayPointer] = new ImageIcon(getClass().getClassLoader().getResource("images/tiles/man" + i + ".gif"));
             ++this.arrayPointer;
             ++imageLoadStatus;
-            this.showStatus("Loading images: " + 100 * imageLoadStatus / 35 + "%");
         }
 
         for(i = 1; i <= 9; ++i) {
             this.tileImages[this.arrayPointer] = new ImageIcon(getClass().getClassLoader().getResource("images/tiles/pin" + i + ".gif"));
             ++this.arrayPointer;
             ++imageLoadStatus;
-            this.showStatus("Loading images: " + 100 * imageLoadStatus / 35 + "%");
         }
 
         for(i = 1; i <= 9; ++i) {
             this.tileImages[this.arrayPointer] = new ImageIcon(getClass().getClassLoader().getResource("images/tiles/sou" + i + ".gif"));
             ++this.arrayPointer;
             ++imageLoadStatus;
-            this.showStatus("Loading images: " + 100 * imageLoadStatus / 35 + "%");
         }
 
         this.tileImages[this.arrayPointer] = new ImageIcon(getClass().getClassLoader().getResource("images/tiles/haku.gif"));
         ++this.arrayPointer;
         ++imageLoadStatus;
-        this.showStatus("Loading images: " + 100 * imageLoadStatus / 35 + "%");
         this.tileImages[this.arrayPointer] = new ImageIcon(getClass().getClassLoader().getResource("images/tiles/hatsu.gif"));
         ++this.arrayPointer;
         ++imageLoadStatus;
-        this.showStatus("Loading images: " + 100 * imageLoadStatus / 35 + "%");
         this.tileImages[this.arrayPointer] = new ImageIcon(getClass().getClassLoader().getResource("images/tiles/chun.gif"));
         ++this.arrayPointer;
         ++imageLoadStatus;
-        this.showStatus("Loading images: " + 100 * imageLoadStatus / 35 + "%");
         this.tileImages[this.arrayPointer] = new ImageIcon(getClass().getClassLoader().getResource("images/tiles/ton.gif"));
         ++this.arrayPointer;
         ++imageLoadStatus;
-        this.showStatus("Loading images: " + 100 * imageLoadStatus / 35 + "%");
         this.tileImages[this.arrayPointer] = new ImageIcon(getClass().getClassLoader().getResource("images/tiles/nan.gif"));
         ++this.arrayPointer;
         ++imageLoadStatus;
-        this.showStatus("Loading images: " + 100 * imageLoadStatus / 35 + "%");
         this.tileImages[this.arrayPointer] = new ImageIcon(getClass().getClassLoader().getResource("images/tiles/sha.gif"));
         ++this.arrayPointer;
         ++imageLoadStatus;
-        this.showStatus("Loading images: " + 100 * imageLoadStatus / 35 + "%");
         this.tileImages[this.arrayPointer] = new ImageIcon(getClass().getClassLoader().getResource("images/tiles/pei.gif"));
         ++this.arrayPointer;
         ++imageLoadStatus;
-        this.showStatus("Loading images: " + 100 * imageLoadStatus / 35 + "%");
         this.tileImages[this.arrayPointer] = new ImageIcon(getClass().getClassLoader().getResource("images/tiles/back.gif"));
         ++imageLoadStatus;
-        this.showStatus("Loading images: " + 100 * imageLoadStatus / 35 + "%");
         this.handTiles = new int[34];
         this.handClosedTiles = new int[34];
         this.handOpenTiles = new int[34];
@@ -404,48 +417,48 @@ public class MJScoreQuiz extends JApplet implements KeyListener, ActionListener,
         this.numHands = 1;
         this.numCorHan = this.numCorFu = this.numCorPay = 0;
         this.yakuStrings = new String[23];
-        this.yakuStrings[0] = "???/Riichi";
-        this.yakuStrings[1] = "??/Tsumo";
-        this.yakuStrings[2] = "??/Round wind";
-        this.yakuStrings[3] = "??/Seat wind";
-        this.yakuStrings[4] = "??/Yakuhai";
-        this.yakuStrings[5] = "???/Tan yao chuu";
-        this.yakuStrings[6] = "??/Pinfu";
-        this.yakuStrings[7] = "???/Ii pei kou";
-        this.yakuStrings[8] = "?????/Hon chanta yao chuu";
-        this.yakuStrings[9] = "????/Ikki tsuu kan";
-        this.yakuStrings[10] = "????/San shoku dou jun";
-        this.yakuStrings[11] = "????/San shoku dou kou";
-        this.yakuStrings[12] = "???????/Open riichi";
-        this.yakuStrings[13] = "???/San kan tsu";
-        this.yakuStrings[14] = "???/Toitoi hou";
-        this.yakuStrings[15] = "???/San an kou";
-        this.yakuStrings[16] = "???/Shou san gen";
-        this.yakuStrings[17] = "???/Hon rou tou";
-        this.yakuStrings[18] = "???/Chii toi tsu";
-        this.yakuStrings[19] = "?????/Jun chanta yao chuu";
-        this.yakuStrings[20] = "???/Hon itsu";
-        this.yakuStrings[21] = "???/Ryan pei kou";
-        this.yakuStrings[22] = "???/Chin itsu";
+        this.yakuStrings[0] = "Riichi";
+        this.yakuStrings[1] = "Tsumo";
+        this.yakuStrings[2] = "Round wind";
+        this.yakuStrings[3] = "Seat wind";
+        this.yakuStrings[4] = "Yakuhai";
+        this.yakuStrings[5] = "Tanyao";
+        this.yakuStrings[6] = "Pinfu";
+        this.yakuStrings[7] = "Iipeikou";
+        this.yakuStrings[8] = "Chanta";
+        this.yakuStrings[9] = "Ittsu";
+        this.yakuStrings[10] = "Sanshoku";
+        this.yakuStrings[11] = "Sanshoko doukou";
+        this.yakuStrings[12] = "Open riichi";
+        this.yakuStrings[13] = "San kantsu";
+        this.yakuStrings[14] = "Toitoi";
+        this.yakuStrings[15] = "San ankou";
+        this.yakuStrings[16] = "Shousangen";
+        this.yakuStrings[17] = "Honroutou";
+        this.yakuStrings[18] = "Chiitoitsu";
+        this.yakuStrings[19] = "Junchan";
+        this.yakuStrings[20] = "Honitsu";
+        this.yakuStrings[21] = "Ryanpeikou";
+        this.yakuStrings[22] = "Chinitsu";
         this.yakumanStrings = new String[15];
-        this.yakumanStrings[0] = "???/Dai san gen";
-        this.yakumanStrings[1] = "???/Suu an kou";
-        this.yakumanStrings[2] = "?????/Suu an kou tanki wait";
-        this.yakumanStrings[3] = "???/Tsuu ii sou";
-        this.yakumanStrings[4] = "???/Ryuu ii sou";
-        this.yakumanStrings[5] = "???/Dai sha rin";
-        this.yakumanStrings[6] = "???/Chin rou tou";
-        this.yakumanStrings[7] = "????/Kokushi musou";
-        this.yakumanStrings[8] = "????13?/Kokushi musou 13-sided wait";
-        this.yakumanStrings[9] = "???/Shou suu shi";
-        this.yakumanStrings[10] = "???/Dai suu shi";
-        this.yakumanStrings[11] = "???/Suu kan tsu";
-        this.yakumanStrings[12] = "????/Chuu ren pou tou";
-        this.yakumanStrings[13] = "??????/Junsei chuu ren pou tou";
-        this.yakumanStrings[14] = "????????????/Open riichi, win by Ron";
+        this.yakumanStrings[0] = "Daisangen";
+        this.yakumanStrings[1] = "Suu ankou";
+        this.yakumanStrings[2] = "Suu ankou tanki wait";
+        this.yakumanStrings[3] = "Tsuuiisou";
+        this.yakumanStrings[4] = "Ryuuiisou";
+        this.yakumanStrings[5] = "Daisharin";
+        this.yakumanStrings[6] = "Chinroutou";
+        this.yakumanStrings[7] = "Kokushi musou";
+        this.yakumanStrings[8] = "Kokushi musou 13-sided wait";
+        this.yakumanStrings[9] = "Shousuushi";
+        this.yakumanStrings[10] = "Daisuushi";
+        this.yakumanStrings[11] = "Suu kantsu";
+        this.yakumanStrings[12] = "Chuuren poutou";
+        this.yakumanStrings[13] = "Junsei chuuren poutou";
+        this.yakumanStrings[14] = "Open riichi, win by Ron";
         this.newHand();
         if(!this.isError) {
-            this.hanList.setText("Thanks to Alvin for hosting!\nhttp://arcturus.su/tenhou/");
+            this.hanList.setText("Thanks to UmaiKeiki on \n#mahjong who wrote the applet \nthat this was created from.");
         }
 
     }
@@ -468,19 +481,19 @@ public class MJScoreQuiz extends JApplet implements KeyListener, ActionListener,
 
         if(!this.handYaku[12]) {
             g.setColor(Color.BLACK);
-            g.fillRect(5, 100, 5 + 35 * this.numClosedTiles, 75);
+            g.fillRect(5, 100 + HAND_OFFSET_Y, 5 + 35 * this.numClosedTiles, 75);
             g.setColor(Color.WHITE);
-            g.drawString("?/Closed", 10, 115);
+            g.drawString("Closed", 10, 115 + HAND_OFFSET_Y);
         } else {
             g.setColor(Color.BLACK);
-            g.drawRect(5, 100, 5 + 35 * this.numClosedTiles, 75);
-            g.drawString("?/Open", 10, 115);
+            g.drawRect(5, 100 + HAND_OFFSET_Y, 5 + 35 * this.numClosedTiles, 75);
+            g.drawString("Open", 10, 115 + HAND_OFFSET_Y);
         }
 
         for(i = 0; i < this.handClosedTiles.length; ++i) {
             if(this.handClosedTiles[i] > 0) {
                 for(int j = 0; j < this.handClosedTiles[i]; ++j) {
-                    this.tileImages[i].paintIcon(this, g, drawX, 126);
+                    this.tileImages[i].paintIcon(this, g, drawX, 126 + HAND_OFFSET_Y);
                     drawX += 35;
                 }
             }
@@ -488,13 +501,13 @@ public class MJScoreQuiz extends JApplet implements KeyListener, ActionListener,
 
         for(i = 0; i < this.closedKans.length; ++i) {
             if(this.closedKans[i] > -1) {
-                this.tileImages[34].paintIcon(this, g, drawX, 126);
+                this.tileImages[34].paintIcon(this, g, drawX, 126 + HAND_OFFSET_Y);
                 drawX += 35;
-                this.tileImages[this.closedKans[i]].paintIcon(this, g, drawX, 126);
+                this.tileImages[this.closedKans[i]].paintIcon(this, g, drawX, 126 + HAND_OFFSET_Y);
                 drawX += 35;
-                this.tileImages[this.closedKans[i]].paintIcon(this, g, drawX, 126);
+                this.tileImages[this.closedKans[i]].paintIcon(this, g, drawX, 126 + HAND_OFFSET_Y);
                 drawX += 35;
-                this.tileImages[34].paintIcon(this, g, drawX, 126);
+                this.tileImages[34].paintIcon(this, g, drawX, 126 + HAND_OFFSET_Y);
                 drawX += 35;
             }
         }
@@ -502,12 +515,12 @@ public class MJScoreQuiz extends JApplet implements KeyListener, ActionListener,
         if(this.numOpenTiles > 0) {
             g.setColor(Color.BLACK);
             drawX = 15 + 35 * this.numClosedTiles;
-            g.drawRect(drawX, 100, 5 + 35 * this.numOpenTiles, 75);
+            g.drawRect(drawX, 100 + HAND_OFFSET_Y, 5 + 35 * this.numOpenTiles, 75);
             drawX += 5;
-            g.drawString("?/Open", drawX, 115);
+            g.drawString("Open", drawX, 115 + HAND_OFFSET_Y);
 
             for(i = 0; i < this.numOpenTiles; ++i) {
-                this.tileImages[this.handOpenDisp[i]].paintIcon(this, g, drawX, 126);
+                this.tileImages[this.handOpenDisp[i]].paintIcon(this, g, drawX, 126 + HAND_OFFSET_Y);
                 drawX += 35;
             }
         }
@@ -519,16 +532,16 @@ public class MJScoreQuiz extends JApplet implements KeyListener, ActionListener,
         }
 
         if(this.ronWind == 4) {
-            g.fillRect(drawX, 100, 90, 75);
+            g.fillRect(drawX, 100 + HAND_OFFSET_Y, 90, 75);
             g.setColor(Color.WHITE);
-            g.drawString("??/Tsumo", drawX + 5, 115);
+            g.drawString("Tsumo", drawX + 5, 115 + HAND_OFFSET_Y);
             g.setColor(Color.BLACK);
         } else {
-            g.drawRect(drawX, 100, 90, 75);
-            g.drawString("??/Ron (" + this.getWindString(this.ronWind) + ")", drawX + 5, 115);
+            g.drawRect(drawX, 100 + HAND_OFFSET_Y, 90, 75);
+            g.drawString("Ron (" + this.getWindString(this.ronWind) + ")", drawX + 5, 115 + HAND_OFFSET_Y);
         }
 
-        this.tileImages[this.agariHai].paintIcon(this, g, drawX + 30, 126);
+        this.tileImages[this.agariHai].paintIcon(this, g, drawX + 30, 126 + HAND_OFFSET_Y);
         g.drawRect(this.dorax, this.doray, 155, 59);
         g.drawRect(this.dorax + 165, this.doray, 155, 59);
 
@@ -704,7 +717,7 @@ public class MJScoreQuiz extends JApplet implements KeyListener, ActionListener,
         }
 
         if(this.isRiichi) {
-            this.riichiField.setText("???????/Riichi declared");
+            this.riichiField.setText("Riichi declared");
         }
 
         this.addHandTiles();
@@ -758,13 +771,13 @@ public class MJScoreQuiz extends JApplet implements KeyListener, ActionListener,
     public String getWindString(int w) {
         switch(w) {
             case 0:
-                return "?";
+                return "東";
             case 1:
-                return "?";
+                return "南";
             case 2:
-                return "?";
+                return "西";
             case 3:
-                return "?";
+                return "北";
             default:
                 return "X";
         }
@@ -2404,31 +2417,31 @@ public class MJScoreQuiz extends JApplet implements KeyListener, ActionListener,
     public void countFu() {
         if(this.handHan >= 5) {
             if(this.handHan < 6) {
-                this.answerString2 = this.answerString2 + "??/Mangan\n";
+                this.answerString2 = this.answerString2 + "Mangan\n";
             } else if(this.handHan < 8) {
-                this.answerString2 = this.answerString2 + "??/Haneman\n";
+                this.answerString2 = this.answerString2 + "Haneman\n";
             } else if(this.handHan < 11) {
-                this.answerString2 = this.answerString2 + "??/Baiman\n";
+                this.answerString2 = this.answerString2 + "Baiman\n";
             } else if(this.handHan < 13) {
-                this.answerString2 = this.answerString2 + "???/Sanbaiman\n";
+                this.answerString2 = this.answerString2 + "Sanbaiman\n";
             } else {
-                this.answerString2 = this.answerString2 + "??/Yakuman\n";
+                this.answerString2 = this.answerString2 + "Yakuman\n";
             }
 
         } else if(this.numMelds == 7) {
             this.handFu = this.unroundedFu = 25;
-            this.answerString2 = this.answerString2 + "25 - ???/Chii toi tsu\n";
+            this.answerString2 = this.answerString2 + "25 - Chiitoitsu\n";
         } else {
             this.unroundedFu = 20;
-            this.answerString2 = this.answerString2 + "20 - ??/Fuutei\n";
+            this.answerString2 = this.answerString2 + "20 - Fuutei\n";
             if(this.isClosed && this.ronWind < 4) {
                 this.unroundedFu += 10;
-                this.answerString2 = this.answerString2 + "10 - ????/Menzen ron\n";
+                this.answerString2 = this.answerString2 + "10 - Menzen ron\n";
             }
 
             if(this.ronWind == 4 && !this.handYaku[6]) {
                 this.unroundedFu += 2;
-                this.answerString2 = this.answerString2 + "2 - ??/Tsumo\n";
+                this.answerString2 = this.answerString2 + "2 - Tsumo\n";
             }
 
             int i;
@@ -2439,7 +2452,7 @@ public class MJScoreQuiz extends JApplet implements KeyListener, ActionListener,
             for(i = 0; i < 4; ++i) {
                 if(!this.isMeldChecked[i] && this.meldType[i] == 1 && this.meldTile[i] < 27 && this.meldClose[i] == 1 && this.meldTile[i] % 9 > 0 && this.meldTile[i] % 9 < 8) {
                     this.unroundedFu += 2;
-                    this.answerString2 = this.answerString2 + "2 - ????/Tan yao min kou\n";
+                    this.answerString2 = this.answerString2 + "2 - Tanyao minkou\n";
                     this.isMeldChecked[i] = true;
                 }
             }
@@ -2449,12 +2462,12 @@ public class MJScoreQuiz extends JApplet implements KeyListener, ActionListener,
                     if(this.meldTile[i] < 27) {
                         if(this.meldTile[i] % 9 == 0 || this.meldTile[i] % 9 == 8) {
                             this.unroundedFu += 4;
-                            this.answerString2 = this.answerString2 + "4 - ????/Yao chuu min kou\n";
+                            this.answerString2 = this.answerString2 + "4 - Yao chuu minkou\n";
                             this.isMeldChecked[i] = true;
                         }
                     } else {
                         this.unroundedFu += 4;
-                        this.answerString2 = this.answerString2 + "4 - ????/Yao chuu min kou\n";
+                        this.answerString2 = this.answerString2 + "4 - Yao chuu minkou\n";
                         this.isMeldChecked[i] = true;
                     }
                 }
@@ -2463,7 +2476,7 @@ public class MJScoreQuiz extends JApplet implements KeyListener, ActionListener,
             for(i = 0; i < 4; ++i) {
                 if(!this.isMeldChecked[i] && this.meldType[i] == 1 && this.meldTile[i] < 27 && this.meldClose[i] == 0 && this.meldTile[i] % 9 > 0 && this.meldTile[i] % 9 < 8) {
                     this.unroundedFu += 4;
-                    this.answerString2 = this.answerString2 + "4 - ????/Tan yao an kou\n";
+                    this.answerString2 = this.answerString2 + "4 - Tanyao ankou\n";
                     this.isMeldChecked[i] = true;
                 }
             }
@@ -2473,12 +2486,12 @@ public class MJScoreQuiz extends JApplet implements KeyListener, ActionListener,
                     if(this.meldTile[i] < 27) {
                         if(this.meldTile[i] % 9 == 0 || this.meldTile[i] % 9 == 8) {
                             this.unroundedFu += 8;
-                            this.answerString2 = this.answerString2 + "8 - ????/Yao chuu an kou\n";
+                            this.answerString2 = this.answerString2 + "8 - Yao chuu ankou\n";
                             this.isMeldChecked[i] = true;
                         }
                     } else {
                         this.unroundedFu += 8;
-                        this.answerString2 = this.answerString2 + "8 - ????/Yao chuu an kou\n";
+                        this.answerString2 = this.answerString2 + "8 - Yao chuu ankou\n";
                         this.isMeldChecked[i] = true;
                     }
                 }
@@ -2487,7 +2500,7 @@ public class MJScoreQuiz extends JApplet implements KeyListener, ActionListener,
             for(i = 0; i < 4; ++i) {
                 if(!this.isMeldChecked[i] && this.meldType[i] == 2 && this.meldTile[i] < 27 && this.meldClose[i] == 1 && this.meldTile[i] % 9 > 0 && this.meldTile[i] % 9 < 8) {
                     this.unroundedFu += 8;
-                    this.answerString2 = this.answerString2 + "8 - ????/Tan yao min kan\n";
+                    this.answerString2 = this.answerString2 + "8 - Tan yao minkan\n";
                     this.isMeldChecked[i] = true;
                 }
             }
@@ -2497,12 +2510,12 @@ public class MJScoreQuiz extends JApplet implements KeyListener, ActionListener,
                     if(this.meldTile[i] < 27) {
                         if(this.meldTile[i] % 9 == 0 || this.meldTile[i] % 9 == 8) {
                             this.unroundedFu += 16;
-                            this.answerString2 = this.answerString2 + "16 - ????/Yao chuu min kan\n";
+                            this.answerString2 = this.answerString2 + "16 - Yao chuu minkan\n";
                             this.isMeldChecked[i] = true;
                         }
                     } else {
                         this.unroundedFu += 16;
-                        this.answerString2 = this.answerString2 + "16 - ????/Yao chuu min kan\n";
+                        this.answerString2 = this.answerString2 + "16 - Yao chuu minkan\n";
                         this.isMeldChecked[i] = true;
                     }
                 }
@@ -2511,7 +2524,7 @@ public class MJScoreQuiz extends JApplet implements KeyListener, ActionListener,
             for(i = 0; i < 4; ++i) {
                 if(!this.isMeldChecked[i] && this.meldType[i] == 2 && this.meldTile[i] < 27 && this.meldClose[i] == 0 && this.meldTile[i] % 9 > 0 && this.meldTile[i] % 9 < 8) {
                     this.unroundedFu += 16;
-                    this.answerString2 = this.answerString2 + "16 - ????/Tan yao an kan\n";
+                    this.answerString2 = this.answerString2 + "16 - Tan yao ankan\n";
                     this.isMeldChecked[i] = true;
                 }
             }
@@ -2521,12 +2534,12 @@ public class MJScoreQuiz extends JApplet implements KeyListener, ActionListener,
                     if(this.meldTile[i] < 27) {
                         if(this.meldTile[i] % 9 == 0 || this.meldTile[i] % 9 == 8) {
                             this.unroundedFu += 32;
-                            this.answerString2 = this.answerString2 + "32 - ????/Yao chuu an kan\n";
+                            this.answerString2 = this.answerString2 + "32 - Yao chuu ankan\n";
                             this.isMeldChecked[i] = true;
                         }
                     } else {
                         this.unroundedFu += 32;
-                        this.answerString2 = this.answerString2 + "32 - ????/Yao chuu an kan\n";
+                        this.answerString2 = this.answerString2 + "32 - Yao chuu ankan\n";
                         this.isMeldChecked[i] = true;
                     }
                 }
@@ -2538,53 +2551,53 @@ public class MJScoreQuiz extends JApplet implements KeyListener, ActionListener,
 
             if(this.meldTile[4] > 26 && this.meldTile[4] < 30) {
                 this.unroundedFu += 2;
-                this.answerString2 = this.answerString2 + "2 - ?????/Sangenpai jantou\n";
+                this.answerString2 = this.answerString2 + "2 - Sangenpai jantou\n";
             }
 
             if(this.meldTile[4] == 30 + this.seatWind) {
                 this.unroundedFu += 2;
-                this.answerString2 = this.answerString2 + "2 - ????/Seat wind jantou\n";
+                this.answerString2 = this.answerString2 + "2 - Seat wind jantou\n";
             }
 
             if(this.meldTile[4] == 30 + this.roundWind) {
                 this.unroundedFu += 2;
-                this.answerString2 = this.answerString2 + "2 - ????/Round wind jantou\n";
+                this.answerString2 = this.answerString2 + "2 - Round wind jantou\n";
             }
 
             if(!this.handYaku[6]) {
                 switch(this.waitType) {
                     case 0:
                         this.unroundedFu += 2;
-                        this.answerString2 = this.answerString2 + "2 - ????/Penchan wait\n";
+                        this.answerString2 = this.answerString2 + "2 - Penchan wait\n";
                         break;
                     case 1:
                         this.unroundedFu += 2;
-                        this.answerString2 = this.answerString2 + "2 - ????/Kanchan wait\n";
+                        this.answerString2 = this.answerString2 + "2 - Kanchan wait\n";
                         break;
                     case 2:
-                        this.answerString2 = this.answerString2 + "0 - ????/Ryanmen wait\n";
+                        this.answerString2 = this.answerString2 + "0 - Ryanmen wait\n";
                         break;
                     case 3:
-                        this.answerString2 = this.answerString2 + "0 - ?????/Shanpon wait\n";
+                        this.answerString2 = this.answerString2 + "0 - Shanpon wait\n";
                         break;
                     case 4:
                     default:
                         this.unroundedFu += 2;
-                        this.answerString2 = this.answerString2 + "2 - ????/Tanki wait\n";
+                        this.answerString2 = this.answerString2 + "2 - Tanki wait\n";
                 }
             } else {
-                this.answerString2 = this.answerString2 + "0 - ????/Ryanmen wait\n";
+                this.answerString2 = this.answerString2 + "0 - Ryanmen wait\n";
             }
 
             if(this.handHan == 1 && this.unroundedFu == 20 && !this.handYaku[6]) {
                 this.unroundedFu += 10;
-                this.answerString2 = this.answerString2 + "10 - ????/Open pinfu\n";
+                this.answerString2 = this.answerString2 + "10 - Open pinfu\n";
             }
 
             this.answerString2 = this.answerString2 + "==========\n";
             this.answerString2 = this.answerString2 + this.unroundedFu + "\n";
             this.handFu = 10 * (int)Math.ceil((double)this.unroundedFu / 10.0D);
-            this.answerString2 = this.answerString2 + "?" + this.handFu + "\n";
+            this.answerString2 = this.answerString2 + "->" + this.handFu + "\n";
         }
     }
 
@@ -3140,7 +3153,7 @@ public class MJScoreQuiz extends JApplet implements KeyListener, ActionListener,
 
         if(this.numDora > 0) {
             this.handHan += this.numDora;
-            this.answerString = this.answerString + this.numDora + " - ??/Dora\n";
+            this.answerString = this.answerString + this.numDora + " - Dora\n";
         }
 
         this.answerString = this.answerString + "==========\n" + this.handHan + "\n";
