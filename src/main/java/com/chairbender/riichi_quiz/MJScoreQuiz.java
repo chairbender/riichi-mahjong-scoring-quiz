@@ -429,7 +429,7 @@ public class MJScoreQuiz extends JFrame implements KeyListener, ActionListener, 
         this.yakuStrings[9] = "Ittsu";
         this.yakuStrings[10] = "Sanshoku";
         this.yakuStrings[11] = "Sanshoko doukou";
-        //this.yakuStrings[12] = "Open riichi"; house rule
+        this.yakuStrings[12] = "Open riichi"; //house rule
         this.yakuStrings[13] = "San kantsu";
         this.yakuStrings[14] = "Toitoi";
         this.yakuStrings[15] = "San ankou";
@@ -446,7 +446,7 @@ public class MJScoreQuiz extends JFrame implements KeyListener, ActionListener, 
         this.yakumanStrings[2] = "Suu ankou tanki wait";
         this.yakumanStrings[3] = "Tsuuiisou";
         this.yakumanStrings[4] = "Ryuuiisou";
-        //this.yakumanStrings[5] = "Daisharin"; house rule
+        this.yakumanStrings[5] = "Daisharin"; //house rule
         this.yakumanStrings[6] = "Chinroutou";
         this.yakumanStrings[7] = "Kokushi musou";
         this.yakumanStrings[8] = "Kokushi musou 13-sided wait";
@@ -705,6 +705,7 @@ public class MJScoreQuiz extends JFrame implements KeyListener, ActionListener, 
                 this.addYakuman(this.rand(15));
             } else {
                 this.addYaku(this.rand(23));
+                this.addYaku(15);
             }
         } else {
             this.compatibleYaku[17] = this.compatibleYaku[16] = this.compatibleYaku[22] = this.compatibleYaku[12] = false;
@@ -918,9 +919,8 @@ public class MJScoreQuiz extends JFrame implements KeyListener, ActionListener, 
 
     public void addYaku(int y) {
         //make open riichi impossible because it's a house rule
-        this.compatibleYaku[12] = false;
         if (y == 12) {
-            //in the event this was chosen, instead choose san kantsu
+            //in the event open riichi was chosen, instead choose san kantsu
             this.handYaku[13] = true;
         } else {
             this.handYaku[y] = true;
@@ -1015,11 +1015,6 @@ public class MJScoreQuiz extends JFrame implements KeyListener, ActionListener, 
             case 15:
                 this.minMelds[5] = 3;
                 this.compatibleYaku[6] = this.compatibleYaku[7] = this.compatibleYaku[9] = this.compatibleYaku[10] = this.compatibleYaku[21] = this.compatibleYaku[18] = false;
-                //only allow this hand to be closed since the logic for san ankou is a bit complicated if it's open
-                this.isClosed = true;
-                if(this.rand(2) == 1) {
-                    this.addYaku(0);
-                }
                 break;
             case 16:
                 this.minMelds[16] = 1;
@@ -1177,7 +1172,7 @@ public class MJScoreQuiz extends JFrame implements KeyListener, ActionListener, 
                     }
                 }
                 break;
-            /*house rule
+            /*house rule. never create this
             case 5:
                 for(i = 0; i < 7; ++i) {
                     this.addMeld(3, 10 + i, 0);
@@ -1187,6 +1182,8 @@ public class MJScoreQuiz extends JFrame implements KeyListener, ActionListener, 
                 this.numMelds = 7;
                 this.isJantouSet = true;
                 break;*/
+            //if chariot was chosen, instead choose this one because we never want to create chariot since it's a house rule
+            case 5:
             case 6:
                 this.minMelds[7] = 4;
                 this.minMelds[13] = 1;
@@ -2643,7 +2640,7 @@ public class MJScoreQuiz extends JFrame implements KeyListener, ActionListener, 
                 this.isMeldPossible = this.isMeldPossible && this.handTiles[i] == 2;
             }
 
-            /* house rule (chariot), make it impossible
+            /* house rule (chariot), make it impossible to earn
             if(this.isMeldPossible) {
                 ++this.numYakuman;
                 this.answerString = this.answerString + this.yakumanStrings[5] + "\n";
@@ -3010,8 +3007,15 @@ public class MJScoreQuiz extends JFrame implements KeyListener, ActionListener, 
         this.meldPointer = 0;
 
         for(i = 0; i < 4; ++i) {
+            //for san ankou, the only triplets that count are closed triplets that are not completed
+            //due to ron
             if((this.meldType[i] == 2 || this.meldType[i] == 1) && this.meldClose[i] == 0) {
-                ++this.meldPointer;
+                //the triplet doesn't count if completed by ron.
+                //i.e. this triplet only counts if they won on tsumo or this meld wasn't completed using the winning tile
+                if (this.ronWind == 4 || //win on tsumo, or...
+                        this.agariHai != this.meldTile[i] /*winning tile wasn't part of this meld*/) {
+                    ++this.meldPointer;
+                }
             }
         }
 
