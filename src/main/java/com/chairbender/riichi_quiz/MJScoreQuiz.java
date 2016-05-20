@@ -429,7 +429,7 @@ public class MJScoreQuiz extends JFrame implements KeyListener, ActionListener, 
         this.yakuStrings[9] = "Ittsu";
         this.yakuStrings[10] = "Sanshoku";
         this.yakuStrings[11] = "Sanshoko doukou";
-        this.yakuStrings[12] = "Open riichi";
+        //this.yakuStrings[12] = "Open riichi"; house rule
         this.yakuStrings[13] = "San kantsu";
         this.yakuStrings[14] = "Toitoi";
         this.yakuStrings[15] = "San ankou";
@@ -446,7 +446,7 @@ public class MJScoreQuiz extends JFrame implements KeyListener, ActionListener, 
         this.yakumanStrings[2] = "Suu ankou tanki wait";
         this.yakumanStrings[3] = "Tsuuiisou";
         this.yakumanStrings[4] = "Ryuuiisou";
-        this.yakumanStrings[5] = "Daisharin";
+        //this.yakumanStrings[5] = "Daisharin"; house rule
         this.yakumanStrings[6] = "Chinroutou";
         this.yakumanStrings[7] = "Kokushi musou";
         this.yakumanStrings[8] = "Kokushi musou 13-sided wait";
@@ -707,7 +707,7 @@ public class MJScoreQuiz extends JFrame implements KeyListener, ActionListener, 
                 this.addYaku(this.rand(23));
             }
         } else {
-            this.compatibleYaku[17] = this.compatibleYaku[16] = this.compatibleYaku[22] = false;
+            this.compatibleYaku[17] = this.compatibleYaku[16] = this.compatibleYaku[22] = this.compatibleYaku[12] = false;
 
             do {
                 this.arrayPointer = this.rand(23);
@@ -917,7 +917,14 @@ public class MJScoreQuiz extends JFrame implements KeyListener, ActionListener, 
     }
 
     public void addYaku(int y) {
-        this.handYaku[y] = true;
+        //make open riichi impossible because it's a house rule
+        this.compatibleYaku[12] = false;
+        if (y == 12) {
+            //in the event this was chosen, instead choose san kantsu
+            this.handYaku[13] = true;
+        } else {
+            this.handYaku[y] = true;
+        }
         label65:
         switch(y) {
             case 0:
@@ -980,6 +987,7 @@ public class MJScoreQuiz extends JFrame implements KeyListener, ActionListener, 
                 this.minMelds[10] = 1;
                 this.compatibleYaku[6] = this.compatibleYaku[7] = this.compatibleYaku[9] = this.compatibleYaku[10] = this.compatibleYaku[16] = this.compatibleYaku[18] = this.compatibleYaku[20] = this.compatibleYaku[21] = this.compatibleYaku[22] = false;
                 break;
+            /*house rule
             case 12:
                 this.isRiichi = this.isClosed = true;
                 if(this.rand(4) >= 1) {
@@ -994,7 +1002,8 @@ public class MJScoreQuiz extends JFrame implements KeyListener, ActionListener, 
                             break label65;
                         }
                     }
-                }
+                }*/
+            case 12: //if open riichi is ever chosen, instead choose san kantsu
             case 13:
                 this.minMelds[11] = 3;
                 this.compatibleYaku[6] = this.compatibleYaku[7] = this.compatibleYaku[9] = this.compatibleYaku[10] = this.compatibleYaku[21] = this.compatibleYaku[18] = this.compatibleYaku[8] = this.compatibleYaku[19] = false;
@@ -1006,6 +1015,11 @@ public class MJScoreQuiz extends JFrame implements KeyListener, ActionListener, 
             case 15:
                 this.minMelds[5] = 3;
                 this.compatibleYaku[6] = this.compatibleYaku[7] = this.compatibleYaku[9] = this.compatibleYaku[10] = this.compatibleYaku[21] = this.compatibleYaku[18] = false;
+                //only allow this hand to be closed since the logic for san ankou is a bit complicated if it's open
+                this.isClosed = true;
+                if(this.rand(2) == 1) {
+                    this.addYaku(0);
+                }
                 break;
             case 16:
                 this.minMelds[16] = 1;
@@ -1163,6 +1177,7 @@ public class MJScoreQuiz extends JFrame implements KeyListener, ActionListener, 
                     }
                 }
                 break;
+            /*house rule
             case 5:
                 for(i = 0; i < 7; ++i) {
                     this.addMeld(3, 10 + i, 0);
@@ -1171,7 +1186,7 @@ public class MJScoreQuiz extends JFrame implements KeyListener, ActionListener, 
                 this.curMeld = 0;
                 this.numMelds = 7;
                 this.isJantouSet = true;
-                break;
+                break;*/
             case 6:
                 this.minMelds[7] = 4;
                 this.minMelds[13] = 1;
@@ -1259,6 +1274,7 @@ public class MJScoreQuiz extends JFrame implements KeyListener, ActionListener, 
             case 13:
                 isYakumanSpecial = true;
             case 12:
+            case 14: //since we made 14 impossible, we'll use chuuren poutou if 14 ever gets picked
                 this.honItsu = this.rand(3);
                 this.handTiles[0 + 9 * this.honItsu] = 3;
                 this.handTiles[1 + 9 * this.honItsu] = 1;
@@ -1290,10 +1306,12 @@ public class MJScoreQuiz extends JFrame implements KeyListener, ActionListener, 
                 this.numMelds = 9;
                 this.isJantouSet = true;
                 break;
+            /*house rule, make this impossible
             case 14:
                 this.compatibleYaku[1] = false;
                 this.addYaku(12);
                 break;
+             */
             case 1337:
                 this.addMeld(1, 0, 0);
                 this.addMeld(1, 1, 0);
@@ -2625,10 +2643,11 @@ public class MJScoreQuiz extends JFrame implements KeyListener, ActionListener, 
                 this.isMeldPossible = this.isMeldPossible && this.handTiles[i] == 2;
             }
 
+            /* house rule (chariot), make it impossible
             if(this.isMeldPossible) {
                 ++this.numYakuman;
                 this.answerString = this.answerString + this.yakumanStrings[5] + "\n";
-            }
+            }*/
         }
 
         if(this.isClosed) {
